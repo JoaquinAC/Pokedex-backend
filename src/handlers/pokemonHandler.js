@@ -7,13 +7,26 @@ const {
     updatePokemon
 } = require("../controllers/pokemonController")
 
+//GET | /pokemons/search
+const getPokemonsSearchHandler = async(req,res) => {
+    try {
+      const start = 1
+      const end = 60
+      const allPokemons = await getAllPokemonsAPI(start,end)
 
-//GET | /pokemons
+      res.status(200).json(allPokemons)
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al obtener la lista de Pokémones.' });
+    }
+}
+
+
+//GET | /pokemons/:page
 
 const getPokemonsHandler =  async(req,res) => {
     try {
         // Obtener todos los Pokémon desde la API
-
         const { page } = req.params;
         const pageSize = 12;
 
@@ -31,8 +44,7 @@ const getPokemonsHandler =  async(req,res) => {
 const getPokemonsIDHandler = async(req,res) => {
     try {
         const { id } = req.params;
-        const pokemonId = parseInt(id, 10);
-        const byID = await getPokemonDetailID(pokemonId)
+        const byID = await getPokemonDetailID(id)
 
         res.status(200).json(byID)
     } catch (error) {
@@ -151,5 +163,6 @@ module.exports = {
     postPokemonsHandler,
     deletePokemonHandler,
     updatePokemonHandler,
+    getPokemonsSearchHandler
  }
  

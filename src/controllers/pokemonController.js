@@ -99,25 +99,34 @@ const getPokemonDetailBD = async (id) => {
 
 const getPokemonDetailID = async (id) => {
     try {
-      const apiResult = await getPokemonDetailAPI(id); 
-      const dbResult = await getPokemonDetailBD(id); 
-      
       let result = [];
-
-      if (apiResult) {
-        result.push(apiResult);
+      // Verificar si el ID es un número (para la API)
+      if (/^\d+$/.test(id)) {
+        // Si es un número, busca en la API
+        const apiResult = await getPokemonDetailAPI(id);
+        if (apiResult) {
+          result.push(apiResult);
+        }
       }
-  
-      if (dbResult) {
-        result.push(dbResult);
+      // Verificar si el ID es un UUID (para la base de datos)
+      else if (id.length == 36) {
+        // Si es un UUID, busca en la base de datos
+        const dbResult = await getPokemonDetailBD(id);
+        if (dbResult) {
+          result.push(dbResult);
+        }
+      } else {
+        // Si no es ni un número ni un UUID, lanza un error
+        throw new Error('Formato de ID no válido.');
       }
 
-      return result
+      return result;
     } catch (error) {
       console.error(error);
       throw new Error('Error al obtener el detalle del Pokémon.');
     }
 };
+
   
 //  GET | /pokemons/name?="..."
   
@@ -200,7 +209,16 @@ const getPokemonDetailName = async (name) => {
     try {
       const apiResult = await getPokemonDetailByNameAPI(name); 
       const dbResult = await getPokemonDetailByNameBD(name); 
-      const result = [apiResult, dbResult]; 
+      
+      let result = [];
+      
+      if (apiResult) {
+        result.push(apiResult);
+      }
+  
+      if (dbResult) {
+        result.push(dbResult);
+      }
   
       return result;
     } catch (error) {

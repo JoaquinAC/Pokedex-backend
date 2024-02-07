@@ -6,10 +6,13 @@ const {
     postPokemonsHandler,
     deletePokemonHandler,
     updatePokemonHandler,
+    getPokemonsSearchHandler
 } = require("../handlers/pokemonHandler")
 
 
 const pokemonRouter = Router();
+
+pokemonRouter.get("/search", getPokemonsSearchHandler);
 
 pokemonRouter.get("/main/:page",getPokemonsHandler);
 
