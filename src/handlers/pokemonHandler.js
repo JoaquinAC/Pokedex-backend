@@ -114,10 +114,8 @@ const postPokemonsHandler = async (req, res) => {
 const deletePokemonHandler = async (req, res) => {
     try {
       const { id } = req.params;
-  
-      const pokemonId = parseInt(id, 10);
       
-      const isDeleted = await deletePokemon(pokemonId);
+      const isDeleted = await deletePokemon(id);
   
       if (isDeleted) {
         res.status(200).json({ message: 'Pokémon eliminado exitosamente.' });
